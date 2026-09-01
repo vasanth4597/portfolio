@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award, X, Eye, ExternalLink, CheckCircle, ShieldCheck, Building2 } from 'lucide-react';
+import Interactive3DCard from './3d/Interactive3DCard';
+import { audio } from '../utils/audioFX';
 
 interface Certification {
   name: string;
@@ -82,15 +84,15 @@ export default function Certifications() {
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
 
   return (
-    <section id="certifications" className="py-24 relative z-10 px-6 max-w-7xl mx-auto">
+    <section id="certifications" className="py-28 relative z-10 px-6 max-w-7xl mx-auto">
       
       {/* HEADER */}
-      <div className="text-center space-y-4 mb-16">
+      <div className="text-center space-y-4 mb-20">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-neon-purple/20 bg-neon-purple/5 text-neon-purple text-xs font-semibold uppercase tracking-wider mb-2"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-neon-purple/30 bg-neon-purple/10 text-neon-purple text-xs font-mono font-semibold uppercase tracking-wider mb-2"
         >
           <ShieldCheck className="w-4 h-4" />
           <span>Industry Credentials</span>
@@ -98,12 +100,12 @@ export default function Certifications() {
         
         <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">
           Professional{" "}
-          <span className="bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-blue bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-blue bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(189,0,255,0.3)]">
             Certifications
           </span>
         </h2>
-        <div className="h-1 w-20 bg-gradient-to-r from-neon-purple to-neon-cyan mx-auto rounded-full" />
-        <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+        <div className="h-1 w-24 bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-blue mx-auto rounded-full" />
+        <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
           Verified industry job simulations and technical accreditations from global organizations and technology leaders.
         </p>
       </div>
@@ -117,84 +119,95 @@ export default function Certifications() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: index * 0.08 }}
-            className="glass-card glass-card-hover p-6 rounded-2xl flex flex-col justify-between border border-slate-200 dark:border-white/10 relative overflow-hidden group"
           >
-            {/* Ambient Background Accent Glow */}
-            <div className={`absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl ${cert.gradient} opacity-5 group-hover:opacity-15 rounded-full blur-2xl transition-opacity duration-500 pointer-events-none`} />
+            <Interactive3DCard
+              maxTilt={10}
+              glowColor="rgba(189, 0, 255, 0.25)"
+              className="glass-card p-6 rounded-2xl flex flex-col justify-between border border-white/10 relative overflow-hidden h-full"
+            >
+              {/* Ambient Background Accent Glow */}
+              <div className={`absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl ${cert.gradient} opacity-10 group-hover:opacity-20 rounded-full blur-2xl transition-opacity duration-500 pointer-events-none`} />
 
-            <div className="space-y-4 relative z-10">
-              {/* Org & Date Header */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <div className={`p-2 rounded-xl border ${cert.badgeColor}`}>
-                    <Award className="w-4 h-4" />
+              <div className="space-y-4 relative z-10">
+                {/* Org & Date Header */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`p-2 rounded-xl border ${cert.badgeColor}`}>
+                      <Award className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-extrabold tracking-wide uppercase text-white block">
+                        {cert.org}
+                      </span>
+                      {cert.partner && (
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          via {cert.partner}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs font-extrabold tracking-wide uppercase text-slate-800 dark:text-white block">
-                      {cert.org}
-                    </span>
-                    {cert.partner && (
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
-                        via {cert.partner}
+                  <span className="text-[11px] font-mono font-semibold text-slate-400 bg-white/5 px-2.5 py-1 rounded-full border border-white/10 shrink-0">
+                    {cert.date}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <div className="space-y-2">
+                  <h3 className="text-base font-extrabold text-white leading-snug group-hover:text-neon-cyan transition-colors duration-200 min-h-[48px]">
+                    {cert.name}
+                  </h3>
+                  
+                  {/* Skill badges */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {cert.skills.slice(0, 4).map((skill) => (
+                      <span
+                        key={skill}
+                        className="text-[10px] font-medium bg-white/5 text-slate-300 border border-white/5 px-2 py-0.5 rounded-md"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                    {cert.skills.length > 4 && (
+                      <span className="text-[10px] font-medium text-slate-400 px-1 py-0.5">
+                        +{cert.skills.length - 4}
                       </span>
                     )}
                   </div>
                 </div>
-                <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-white/5 px-2.5 py-1 rounded-full border border-slate-200 dark:border-white/5 shrink-0">
-                  {cert.date}
-                </span>
               </div>
 
-              {/* Title */}
-              <div className="space-y-2">
-                <h3 className="text-base font-extrabold text-slate-900 dark:text-white leading-snug group-hover:text-neon-cyan transition-colors duration-200 min-h-[48px]">
-                  {cert.name}
-                </h3>
+              {/* Bottom Actions */}
+              <div className="flex justify-between items-center pt-5 border-t border-white/10 mt-5 relative z-10">
+                <span className="text-[10px] font-mono text-slate-500 truncate max-w-[120px]" title={`ID: ${cert.id}`}>
+                  ID: {cert.id.substring(0, 10)}...
+                </span>
                 
-                {/* Skill badges */}
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {cert.skills.slice(0, 4).map((skill) => (
-                    <span
-                      key={skill}
-                      className="text-[10px] font-medium bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/5 px-2 py-0.5 rounded-md"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                  {cert.skills.length > 4 && (
-                    <span className="text-[10px] font-medium text-slate-400 px-1 py-0.5">
-                      +{cert.skills.length - 4}
-                    </span>
-                  )}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      audio.playClick();
+                      setSelectedCert(cert);
+                    }}
+                    onMouseEnter={() => audio.playHover()}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-white hover:text-neon-cyan px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-200 focus:outline-none"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    Preview
+                  </button>
+                  <a
+                    href={cert.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onMouseEnter={() => audio.playHover()}
+                    onClick={() => audio.playClick()}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-neon-blue hover:text-neon-purple px-2.5 py-1 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 border border-neon-blue/20 transition-all duration-200 focus:outline-none"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Verify
+                  </a>
                 </div>
               </div>
-            </div>
-
-            {/* Bottom Actions */}
-            <div className="flex justify-between items-center pt-5 border-t border-slate-100 dark:border-white/5 mt-5 relative z-10">
-              <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 truncate max-w-[120px]" title={`ID: ${cert.id}`}>
-                ID: {cert.id.substring(0, 10)}...
-              </span>
-              
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setSelectedCert(cert)}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-neon-cyan dark:hover:text-neon-cyan px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-all duration-200 focus:outline-none"
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                  Preview
-                </button>
-                <a
-                  href={cert.verifyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-neon-blue hover:text-neon-purple px-2.5 py-1 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 transition-all duration-200 focus:outline-none"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  Verify
-                </a>
-              </div>
-            </div>
+            </Interactive3DCard>
           </motion.div>
         ))}
       </div>

@@ -1,39 +1,44 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Eye, X, Mail, Phone, MapPin, Globe, Award, Briefcase, GraduationCap, Code } from 'lucide-react';
+import { Download, Eye, X, Mail, Phone, MapPin, Globe, Award, Briefcase, GraduationCap, Code, FileText } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import Interactive3DCard from './3d/Interactive3DCard';
+import { audio } from '../utils/audioFX';
 
 export default function ResumeSection() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDownload = () => {
-    // Interactive feedback
+    audio.playSuccess();
     confetti({
-      particleCount: 80,
-      spread: 60,
+      particleCount: 100,
+      spread: 70,
       origin: { y: 0.8 },
-      colors: ['#00f0ff', '#bd00ff']
+      colors: ['#00f0ff', '#bd00ff', '#00ffd1', '#ff007a']
     });
 
-    // In a production setup, this would trigger actual PDF download.
-    // For local convenience, we can trigger print style or provide a notification.
     window.print();
   };
 
   return (
-    <section id="resume" className="py-24 relative z-10 px-6 max-w-7xl mx-auto">
+    <section id="resume" className="py-28 relative z-10 px-6 max-w-7xl mx-auto">
       
       {/* HEADER */}
-      <div className="text-center space-y-4 mb-16">
+      <div className="text-center space-y-4 mb-20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon-cyan/10 border border-neon-cyan/30 text-neon-cyan text-xs font-mono font-semibold">
+          <FileText className="w-3.5 h-3.5" />
+          <span>Curriculum Vitae</span>
+        </div>
+
         <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">
           Interactive{" "}
-          <span className="bg-gradient-to-r from-neon-blue to-neon-cyan bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(0,240,255,0.3)]">
             Resume
           </span>
         </h2>
-        <div className="h-1 w-20 bg-gradient-to-r from-neon-blue to-neon-cyan mx-auto rounded-full" />
-        <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto">
-          Preview my educational and project background, and download a printable version.
+        <div className="h-1 w-24 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan mx-auto rounded-full" />
+        <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+          Preview comprehensive academic, internship, and project background, or download a high-resolution printable copy.
         </p>
       </div>
 
@@ -44,37 +49,47 @@ export default function ResumeSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="glass-card p-8 rounded-2xl border border-slate-200 dark:border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
         >
-          <div className="space-y-4 text-center md:text-left">
-            <h3 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white">
-              Looking for my CV?
-            </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-455 max-w-md font-normal leading-relaxed">
-              View the document directly inside the app, or download a printable PDF copy for your recruiting database.
-            </p>
-            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-              <span className="text-[10px] bg-neon-blue/10 text-neon-blue px-2 py-0.5 rounded font-bold uppercase">A4 Format</span>
-              <span className="text-[10px] bg-neon-purple/10 text-neon-purple px-2 py-0.5 rounded font-bold uppercase">Print Optimized</span>
+          <Interactive3DCard
+            maxTilt={8}
+            glowColor="rgba(0, 240, 255, 0.3)"
+            className="glass-card p-8 md:p-10 rounded-2xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
+          >
+            <div className="space-y-4 text-center md:text-left">
+              <h3 className="text-xl md:text-2xl font-bold text-white">
+                Looking for my CV?
+              </h3>
+              <p className="text-sm text-slate-300 max-w-md font-normal leading-relaxed">
+                View the formatted document directly inside the app, or download a printable PDF copy for your engineering team.
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start font-mono">
+                <span className="text-[10px] bg-neon-blue/15 text-neon-cyan border border-neon-blue/30 px-2.5 py-0.5 rounded-full font-bold uppercase">A4 Format</span>
+                <span className="text-[10px] bg-neon-purple/15 text-neon-purple border border-neon-purple/30 px-2.5 py-0.5 rounded-full font-bold uppercase">ATS Optimized</span>
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <button
-              onClick={() => setIsOpen(true)}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-semibold text-sm hover:border-neon-blue/40 dark:hover:border-neon-blue/40 transition-all duration-300 focus:outline-none"
-            >
-              <Eye className="w-4 h-4 text-neon-blue" />
-              View Resume
-            </button>
-            <button
-              onClick={handleDownload}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-neon-blue to-neon-purple text-white font-semibold text-sm hover:opacity-90 shadow-lg transition-all duration-300 focus:outline-none"
-            >
-              <Download className="w-4 h-4 text-white animate-bounce" />
-              Download / Print
-            </button>
-          </div>
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <button
+                onClick={() => {
+                  audio.playClick();
+                  setIsOpen(true);
+                }}
+                onMouseEnter={() => audio.playHover()}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/5 border border-white/15 text-white font-semibold text-sm hover:border-neon-cyan/50 hover:bg-neon-cyan/10 transition-all duration-300 focus:outline-none shadow-lg"
+              >
+                <Eye className="w-4 h-4 text-neon-cyan" />
+                View Resume
+              </button>
+              <button
+                onClick={handleDownload}
+                onMouseEnter={() => audio.playHover()}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan text-white font-semibold text-sm hover:opacity-95 shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300 focus:outline-none transform hover:scale-[1.02]"
+              >
+                <Download className="w-4 h-4 text-white animate-bounce" />
+                Download / Print
+              </button>
+            </div>
+          </Interactive3DCard>
         </motion.div>
       </div>
 
