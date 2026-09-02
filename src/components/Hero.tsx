@@ -219,11 +219,11 @@ export default function Hero() {
           <div
             className="absolute pointer-events-none"
             style={{
-              width: '120%',
-              height: '120%',
+              width: '130%',
+              height: '130%',
               background:
-                'radial-gradient(ellipse at center, rgba(0, 240, 255, 0.15) 0%, rgba(189, 0, 255, 0.10) 45%, transparent 70%)',
-              filter: 'blur(45px)',
+                'radial-gradient(ellipse at 50% 45%, rgba(0, 240, 255, 0.14) 0%, rgba(189, 0, 255, 0.09) 50%, transparent 75%)',
+              filter: 'blur(40px)',
               zIndex: 0,
             }}
           />
@@ -237,24 +237,26 @@ export default function Hero() {
               src={profilePhoto}
               alt="Vasantharaj S"
               draggable={false}
-              className="w-full h-auto max-h-[540px] md:max-h-[580px] object-contain object-bottom select-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.8)]"
+              className="w-full h-auto max-h-[540px] md:max-h-[580px] object-contain object-bottom select-none drop-shadow-[0_15px_40px_rgba(0,0,0,0.85)]"
               style={{
-                // Natural soft gradient mask on the bottom so it emerges cleanly from the background
+                // 2-Way progressive mask: Soft side edge integration + deep bottom dissolve
                 WebkitMaskImage:
-                  'linear-gradient(to bottom, black 0%, black 70%, rgba(0,0,0,0.6) 85%, transparent 99%)',
+                  'linear-gradient(to bottom, black 0%, black 62%, rgba(0,0,0,0.7) 78%, rgba(0,0,0,0.2) 90%, transparent 100%), linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
+                WebkitMaskComposite: 'source-in',
                 maskImage:
-                  'linear-gradient(to bottom, black 0%, black 70%, rgba(0,0,0,0.6) 85%, transparent 99%)',
-                filter: 'brightness(1.03) contrast(1.04) saturate(1.03)',
+                  'linear-gradient(to bottom, black 0%, black 62%, rgba(0,0,0,0.7) 78%, rgba(0,0,0,0.2) 90%, transparent 100%), linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
+                maskComposite: 'intersect',
+                filter: 'brightness(1.02) contrast(1.03) saturate(1.03)',
               }}
             />
 
             {/* Soft Ambient Ground Bloom */}
             <div
-              className="absolute -bottom-4 left-1/2 -translate-x-1/2 pointer-events-none w-3/4 h-16 rounded-full"
+              className="absolute -bottom-2 left-1/2 -translate-x-1/2 pointer-events-none w-4/5 h-16 rounded-full"
               style={{
                 background:
-                  'radial-gradient(ellipse, rgba(0, 240, 255, 0.25) 0%, rgba(189, 0, 255, 0.12) 50%, transparent 80%)',
-                filter: 'blur(20px)',
+                  'radial-gradient(ellipse, rgba(0, 240, 255, 0.22) 0%, rgba(189, 0, 255, 0.10) 50%, transparent 80%)',
+                filter: 'blur(22px)',
                 zIndex: 2,
               }}
             />
